@@ -22,7 +22,7 @@ RAW_PATH = '/home/zhoujie/liveness detection/raw文件/face/';
 ## 补充
 
 本算法检测类型范围：张照片攻击，视频攻击  
-核心算法：RANSAC随机一致性采样
+核心算法：RANSAC随机一致性采样  
 Matlab版本：https://github.com/zj19941113/Deep-Img-Liveness-Detection  
 
 ## 深度图
