@@ -28,7 +28,15 @@ Matlab版本：https://github.com/zj19941113/Deep-Img-Liveness-Detection
 ## 深度图
 
 ![image](https://github.com/zj19941113/Deep-Img-Liveness-Detection/blob/master/Image/%E4%BA%BA%E8%84%B8%E6%B7%B1%E5%BA%A6%E5%9B%BE.jpg)  
-![image](https://github.com/zj19941113/Deep-Img-Liveness-Detection/blob/master/Image/%E4%BA%BA%E8%84%B8%E6%B7%B1%E5%BA%A6%E5%9B%BE_%E4%BA%BA%E8%84%B8%E6%A0%87%E6%B3%A8%E9%83%A8%E5%88%86.jpg)  
-![image](https://github.com/zj19941113/Deep-Img-Liveness-Detection/blob/master/Image/%E7%BA%B8%E5%BC%A0%E6%94%BB%E5%87%BB%E6%B7%B1%E5%BA%A6%E5%9B%BE.jpg)  
-![image](https://github.com/zj19941113/Deep-Img-Liveness-Detection/blob/master/Image/%E7%BA%B8%E5%BC%A0%E6%94%BB%E5%87%BB%E6%B7%B1%E5%BA%A6%E5%9B%BE_%E4%BA%BA%E8%84%B8%E6%A0%87%E6%B3%A8%E9%83%A8%E5%88%86.jpg)  
 
+# 近红外人脸定位与活体检测  
+通过深度相机的红外图进行人脸位置定位，传给深度图进行活体检测  
+## 运行  
+Ubuntu下编译Dlib库参考这里 https://blog.csdn.net/ffcjjhv/article/details/84660869  
+修改CMakeLists.txt相应路径  
+`cmake .`  
+`make`  
+`./dlib_test`  
+
+## 运行结果  
+![image](https://github.com/zj19941113/Face-Liveness_detection/blob/master/images/result.png) 
