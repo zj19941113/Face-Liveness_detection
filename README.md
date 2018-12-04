@@ -40,3 +40,8 @@ Ubuntu下编译Dlib库参考这里 https://blog.csdn.net/ffcjjhv/article/details
 
 ## 运行结果  
 ![image](https://github.com/zj19941113/Face-Liveness_detection/blob/master/images/result.png) 
+
+## 批处理测试  
+dlib_test_process.cpp 运行结果：
+![image](https://github.com/zj19941113/Face-Liveness_detection/blob/master/images/2018-12-04%2019-10-58%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png) 
+
