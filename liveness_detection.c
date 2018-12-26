@@ -16,14 +16,13 @@ int readFileList(char *basePath)
 {
     DIR *dir;
     struct dirent *ptr; 
-    char base[8]; 
-    char title[4];
+    char base[30]; 
+    char *title;
     char *p=".raw"; //需要的子串;
-    char *p2=".txt";
-    char *padd="/";
-    int len;
+    char *prec_face[4];
+    // char *padd="/";
     char Deepfile_raw[100];
-    char Deepfile_txt[100];
+    char *ptr2;
 
     UNIT16 MatDATA[IMG_HEIGHT*IMG_WIDTH];
     FILE *fp = NULL;
@@ -31,9 +30,6 @@ int readFileList(char *basePath)
     int length;
     int n;
     int i,j;
-    FILE *fp2 = NULL;
-    char buf[20];
-    char *ptr2;
     int rec_face[4];
     int COL ,ROW ,FACE_WIDTH ,FACE_HEIGHT ; 
     int FaceDATA[3][40000];
@@ -59,17 +55,27 @@ int readFileList(char *basePath)
         strcpy(base, ptr->d_name);
         if(strstr(base,p)) 
         {
-            len = strlen(base);
-            memset(title, '\0', sizeof(title));
-            strncpy(title, base, len -4);
+            // printf("%s\n",base); 
+            // printf("%s\n",basePath);
             strcpy(Deepfile_raw, basePath);
-            strcat(Deepfile_raw, padd);
-            strcat(Deepfile_raw, title);
-            strcpy(Deepfile_txt, Deepfile_raw);
-            strcat(Deepfile_raw, p);
-            strcat(Deepfile_txt, p2);
             // printf("%s\n",Deepfile_raw); 
-            // printf("%s\n",Deepfile_txt); 
+            // strcat(Deepfile_raw, padd);
+            strcat(Deepfile_raw, base);
+            printf("%s\n",Deepfile_raw); 
+            ptr2 = strtok(base, "_");
+            for(n = 0; n < 5; n++)
+            {
+                // rec_face[n] = atoi(ptr2);
+                prec_face[n] = ptr2;
+                ptr2 = strtok(NULL, "_");              
+            }
+             
+            for(n = 0; n < 4; n++)
+            {
+            rec_face[n] = atoi(prec_face[n+1]);
+            }
+            // printf("%d,%d,%d,%d\n",rec_face[0],rec_face[1],rec_face[2],rec_face[3]);
+            
 
             // 从.raw读取二进制16位数据到MatDATA 
             fp = fopen( Deepfile_raw, "rb" );
@@ -77,34 +83,23 @@ int readFileList(char *basePath)
             fclose(fp);
             // length = sizeof(MatDATA) / sizeof(UNIT16); 
             // printf("数组的长度为: %d\n",length); //length 应为IMG_HEIGHT*IMG_WIDTH
-            n = 0;
+            // n = 0;
             // DeepDATA三行分别为深度图行数，列数，深度信息
-            for(i=1;i< IMG_HEIGHT+1 ;i++)
-                {
-                    for(j=1;j< IMG_WIDTH+1 ;j++) 
-                    { 
-                        DeepDATA[0][n] = i;
-                        DeepDATA[1][n] = j;
-                        DeepDATA[2][n] = MatDATA[n];
-                        n += 1;
-                    } 
-                } 
+            // for(i=1;i< IMG_HEIGHT+1 ;i++)
+            //     {
+            //         for(j=1;j< IMG_WIDTH+1 ;j++) 
+            //         { 
+            //             DeepDATA[0][n] = i;
+            //             DeepDATA[1][n] = j;
+            //             DeepDATA[2][n] = MatDATA[n];
+            //             n += 1;
+            //         } 
+            //     } 
             // int test1 = 110194 ;
             // printf("%d,%d,%d\n",DeepDATA[0][test1],DeepDATA[1][test1],DeepDATA[2][test1]);	
             
             // FaceDATA为深度图DeepDATA裁剪后且去除零深度信息后的人脸部分
-            n = 0;
-            fp2 = fopen(Deepfile_txt, "r");
-            fgets(buf, 20, fp2);
-            // printf("%s\n", buf );
-            ptr2 = strtok(buf, " ");
-            for(n = 0; n < 4; n++)
-            {
-                rec_face[n] = atoi(ptr2);
-                ptr2 = strtok(NULL, " ");
-
-            }
-            fclose(fp2);
+            // n = 0;
             COL = rec_face[0],ROW = rec_face[1],FACE_WIDTH = rec_face[2],FACE_HEIGHT = rec_face[3]; //位置信息
             // txt :157 66 172 198 , 取行66：66+198,列取157：157+172
             faceno0_num = FACE_HEIGHT*FACE_WIDTH -1; 
@@ -124,7 +119,7 @@ int readFileList(char *basePath)
                         n += 1;
                     } 
                 } 
-            // int test = 6804;  
+            int test = 100;  
             // printf("%d,%d,%d,%d\n",test,FaceDATA[0][test],FaceDATA[1][test],FaceDATA[2][test]);	
             
             srand((unsigned)time(NULL));
@@ -179,7 +174,6 @@ int readFileList(char *basePath)
             }
             float pretotal_ary = pretotal *1.0/ faceno0_num ;
             printf("pretotal = %d,_ary = %f,",pretotal,pretotal_ary);
-            printf("%s",base);
             bool IS_FACE;
 
             if (pretotal_ary>PLANE_OR_NOT)
@@ -206,7 +200,7 @@ int readFileList(char *basePath)
 int main(void)
 {
     DIR *dir;
-    char *basePath = "/home/zhoujie/liveness detection/raw文件/non-face";
+    char *basePath = "/home/zhoujie/桌面/Release/";
     readFileList(basePath);
     return 0;
 }
