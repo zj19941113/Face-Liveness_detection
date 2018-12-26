@@ -13,16 +13,16 @@ using namespace dlib;
 using namespace std;
 
 /* 函数声明 */
-int *face_location(char *imgFile);
-bool liveness_detection(char *DeepFile, int rec_face[4]);  
+int *face_location(const char *imgFile);
+bool liveness_detection(const char *DeepFile, int rec_face[4]);  
 
-const int IMG_HEIGHT =  720;
-const int IMG_WIDTH =  1280;
+const int IMG_HEIGHT =  345;
+const int IMG_WIDTH =  400;
 
 int main()
 {
 
-	char *imgFile = "/home/zhoujie/cProject/dlib_test/0001_IR_frontface.jpg";
+	const char *imgFile = "/home/zhoujie/liveness detection/livenessdetection_matlab/IR-Depth-20181205/IR_29_78_150_151.jpg";
 	int *rec_face;
 
     /* 调用函数得到人脸位置 */
@@ -30,18 +30,14 @@ int main()
 	rec_face = face_location(imgFile);
 
 	//深度图与红外图是水平翻转的
-	rec_face[0] = IMG_WIDTH - rec_face[0] -rec_face[2]; 
-    
-    cout << rec_face[0] << endl;
-    cout << rec_face[1] << endl;
-    cout << rec_face[2] << endl;
-    cout << rec_face[3] << endl;
+	// rec_face[0] = IMG_WIDTH - rec_face[0] -rec_face[2]; 
 
-    char *DeepFile = "/home/zhoujie/cProject/dlib_test/raw_0001_frontface.raw";
+    const char *DeepFile = "/home/zhoujie/liveness detection/livenessdetection_matlab/IR-Depth-20181205/Depth_29_78_150_151_0.raw";
 	bool IS_FACE;
 
 	/* 调用函数判断是否为活体 */
     IS_FACE = liveness_detection( DeepFile, rec_face);
+
     printf("RESULT : %d\n", IS_FACE);
 
     delete rec_face;
@@ -49,17 +45,22 @@ int main()
 
 
 /* 函数 输出人脸位置 */
-int *face_location(char* imgFile)
+int *face_location(const char* imgFile)
 {  
+
     int *rec_face = new int[4];
 
-    frontal_face_detector detector = get_frontal_face_detector();
-
-    cout << "processing image " << imgFile << endl;
-
-    clock_t start,finish;
+	clock_t start,finish;
     double totaltime;
     start=clock();
+
+    frontal_face_detector detector = get_frontal_face_detector();
+	
+	finish=clock();
+    totaltime=(double)(finish-start)/CLOCKS_PER_SEC;
+    cout<<"\n运行时间为"<<totaltime<<"秒！"<<endl;
+
+    cout << "processing image " << imgFile << endl;
 
     array2d<unsigned char> img;
     load_image(img, imgFile);
@@ -73,20 +74,14 @@ int *face_location(char* imgFile)
     rec_face[2] = dets[0].right() - dets[0].left() + 1;
     rec_face[3] = dets[0].bottom() - dets[0].top() + 1;
 
-    finish=clock();
-    totaltime=(double)(finish-start)/CLOCKS_PER_SEC;
-    cout<<"\n此程序的运行时间为"<<totaltime<<"秒！"<<endl;
-
-    // delete rec_face;
-
     return  rec_face;
 }
 
 /* 函数判断是否为活体 */
-bool liveness_detection(char *DeepFile, int rec_face[4])
+bool liveness_detection(const char *DeepFile, int rec_face[4])
 {
-    const int ITER = 10000; // 随机取点次数
-    const float PLANE_OR_NOT = 0.1; // 判断是否为平面的分界线
+    const int ITER = 5000; // 随机取点次数
+    const float PLANE_OR_NOT = 0.2; // 判断是否为平面的分界线
 	const int SIGMA = 1;
     typedef unsigned short UNIT16;
 	
@@ -94,7 +89,10 @@ bool liveness_detection(char *DeepFile, int rec_face[4])
 	UNIT16 MatDATA[IMG_HEIGHT*IMG_WIDTH];
 	FILE *fp = NULL;
 	fp = fopen( DeepFile, "rb" );
-    fread(MatDATA,sizeof(UNIT16),IMG_HEIGHT*IMG_WIDTH,fp);
+    size_t sizeRead = fread(MatDATA,sizeof(UNIT16),IMG_HEIGHT*IMG_WIDTH,fp);
+	if (sizeRead != IMG_HEIGHT*IMG_WIDTH) {
+		printf("error!\n");
+	}	
 	fclose(fp);
 	
 	int n = 0;
@@ -116,7 +114,7 @@ bool liveness_detection(char *DeepFile, int rec_face[4])
 	int COL = rec_face[0],ROW = rec_face[1],FACE_WIDTH = rec_face[2],FACE_HEIGHT = rec_face[3]; //位置信息
 	// txt :157 66 172 198 , 取行66：66+198,列取157：157+172
 	int faceno0_num = FACE_HEIGHT*FACE_WIDTH -1; 
-	int FaceDATA[3][160000];
+	int FaceDATA[3][100000];
 	n = 0;
 	for(i = 1;i< FACE_HEIGHT+1;i++)
 		{
