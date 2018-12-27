@@ -10,14 +10,7 @@
 Func_liveness_detection.c为函数形式，调用处理单一文件  
 
 liveness_detection.c为批处理，修改文件夹路径后直接运行  
-批量处理文件夹中所有.raw深度图文件，在命令行中输出结果，给定人脸活体检测结果  
-输出结果如RESULT.txt所示  
-
-RAW_PATH = '/home/zhoujie/liveness detection/raw文件/non-face/';  
-![image](https://github.com/zj19941113/Face-Liveness_detection/blob/master/images/2018-10-19%2011-55-09%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png) 
-
-RAW_PATH = '/home/zhoujie/liveness detection/raw文件/face/';  
-![image](https://github.com/zj19941113/Face-Liveness_detection/blob/master/images/2018-10-19%2011-58-47%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png) 
+批量处理文件夹中所有.raw深度图文件，在命令行中输出结果 
 
 ## 补充
 
